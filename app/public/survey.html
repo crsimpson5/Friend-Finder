@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Friend Finder</title>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+
 <body>
 
   <div class="container">
-    <h1>Survey Questions</h1> 
+    <br>
+    <h1>Survey Questions</h1>
 
     <form>
       <div class="form-group">
@@ -23,34 +27,48 @@
         <input type="text" class="form-control" id="img-input">
       </div>
 
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
-        <label class="custom-control-label" for="customRadioInline1">1</label>
-      </div>
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
-        <label class="custom-control-label" for="customRadioInline2">2</label>
-      </div>
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input">
-        <label class="custom-control-label" for="customRadioInline3">3</label>
-      </div>
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input">
-        <label class="custom-control-label" for="customRadioInline4">4</label>
-      </div>
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline5" name="customRadioInline1" class="custom-control-input">
-        <label class="custom-control-label" for="customRadioInline5">5</label>
-      </div>
-
-      <br> 
+      <div id="question-div"></div>
 
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <br>
 
     <a href="/api/friends">API Friends List</a> | <a href="https://github.com/crsimpson5/Friend-Finder">GitHub Repo</a>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+
+    var questions = 
+      [
+        "q1", 
+        "q2"
+      ];
+
+    questions.forEach(function (question, index) {
+      var newQ = $("<div>");
+      var radios = $("<div>");
+
+      for (var i = 0; i < 5; i++) {
+        var id = index + "-" + i;
+
+        radios.append("<div class='custom-control custom-radio custom-control-inline'>" +
+          "<input type='radio' id=" + id + " name=" + index + " class='custom-control-input'>" +
+          "<label class='custom-control-label' for=" + id + ">" + (i + 1) + "</label>" +
+        "</div>");
+      }
+
+      newQ.append("<h3>Question " + (index + 1) + "</h3>");
+      newQ.append("<p>" + question + "</p>");
+      newQ.append(radios);
+
+      $("#question-div").append(newQ, "<br>");
+    });
+
+  </script>
+
 </body>
+
 </html>
