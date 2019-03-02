@@ -16,6 +16,9 @@
   <div class="container">
     <br>
     <h1>Survey Questions</h1>
+    <hr class="my-4">
+
+    <h3>About you</h3>
 
     <form>
       <div class="form-group">
@@ -26,19 +29,24 @@
         <label for="img-input">Link to photo (required)</label>
         <input type="text" class="form-control" id="img-input">
       </div>
+      <br>
 
+      <p>Answer from 1 (strongly disagree) to 5 (strongly agree).</p>
       <div id="question-div"></div>
 
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
     </form>
-    <br>
 
+    <hr class="my-4">
     <a href="/api/friends">API Friends List</a> | <a href="https://github.com/crsimpson5/Friend-Finder">GitHub Repo</a>
+    <br><br>
   </div>
 
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
+  <!-- JavaScript -->
   <script type="text/javascript">
 
     var questions = 
@@ -47,6 +55,7 @@
         "q2"
       ];
 
+    // Display questions
     questions.forEach(function (question, index) {
       var newQ = $("<div>");
       var radios = $("<div>");
