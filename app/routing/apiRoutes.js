@@ -1,12 +1,31 @@
-const express = require("express");
-const path = require("path");
-
-const router = express.Router();
-
-router.get("/api/friends", (req, res) => {
+module.exports = (app) => {
   let friends = require("../data/friends.js");
 
-  res.json(friends);
-});
+  app.get("/api/friends", (req, res) => {
+    res.json(friends);
+  });
 
-module.exports = router;
+  app.post("/api/new", (req, res) => {
+    let bestFriend = {};
+    let bestScore = 100;
+    let user = req.body;
+
+    friends.forEach(friend => {
+      let score = 0;
+
+      for (var i = 0; i < user.answers.length; i++) {
+        user.answers[i] = parseInt(user.answers[i]);
+        score += Math.abs(user.answers[i] - friend.answers[i]);
+      }
+
+      if (score < bestScore) {
+        bestScore = score;
+        bestFriend = friend;
+      }
+    });
+
+    friends.push(user);
+
+    res.json(bestFriend);
+  });
+};

@@ -7,8 +7,17 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Friend Finder</title>
 
+  <!-- Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -20,14 +29,15 @@
 
     <h3>About you</h3>
 
-    <form>
+    <!-- Survey form -->
+    <form id="survey">
       <div class="form-group">
         <label for="name-input">Name (required)</label>
-        <input type="name" class="form-control" id="name-input">
+        <input type="name" class="form-control" id="name-input" required>
       </div>
       <div class="form-group">
         <label for="img-input">Link to photo (required)</label>
-        <input type="text" class="form-control" id="img-input">
+        <input type="url" class="form-control" id="img-input" required>
       </div>
       <br>
 
@@ -42,31 +52,57 @@
     <br><br>
   </div>
 
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <!-- Compatible friend modal -->
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Best Match</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3 id="modal-name"></h3>
+          <img src="" class="img-fluid" alt="Responsive image" id="modal-img">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- JavaScript -->
   <script type="text/javascript">
 
-    var questions = 
+    var questions =
       [
-        "q1", 
-        "q2"
+        "You enjoy watching sports and going to sporting events.",
+        "You like to travel the world.",
+        "You feel energetic after spending time with friends.",
+        "You enjoy going to concerts.",
+        "You would rather be inside than outside.",
+        "You enjoy playing video games.",
+        "You like to meet new people.",
+        "You like to try new types of food.",
+        "You enjoy creating art",
+        "You would rather be with a small group of friends rather than a large party"
       ];
 
-    // Display questions
+    // Add questions to form
     questions.forEach(function (question, index) {
       var newQ = $("<div>");
       var radios = $("<div>");
 
+      // Create radio buttons
       for (var i = 0; i < 5; i++) {
         var id = index + "-" + i;
 
         radios.append("<div class='custom-control custom-radio custom-control-inline'>" +
-          "<input type='radio' id=" + id + " name=" + index + " class='custom-control-input'>" +
+          "<input type='radio' id=" + id + " name=" + index + " class='custom-control-input' value=" + (i + 1) + " required>" +
           "<label class='custom-control-label' for=" + id + ">" + (i + 1) + "</label>" +
-        "</div>");
+          "</div>");
       }
 
       newQ.append("<h3>Question " + (index + 1) + "</h3>");
@@ -74,6 +110,35 @@
       newQ.append(radios);
 
       $("#question-div").append(newQ, "<br>");
+    });
+
+    $("#survey").on("submit", function (event) {
+      event.preventDefault();
+
+      var newUser = {
+        name: $("#name-input").val().trim(),
+        photo: $("#img-input").val().trim(),
+        answers: []
+      };
+
+      // Get answer values
+      for (var i = 0; i < questions.length; i++) {
+        var radioGroup = "input[name='" + i + "']:checked";
+
+        newUser.answers.push($(radioGroup).val());
+      }
+
+      console.log(newUser);
+
+      $.post("/api/new", newUser, function (data) {
+        console.log(data);
+
+        $("#modal-name").text(data.name);
+        $("#modal-img").attr("src", data.photo);
+        
+        $("#survey")[0].reset();
+        $("#modal").modal("show");
+      });
     });
 
   </script>
